@@ -4,7 +4,11 @@ import { writeFileSync, existsSync } from "fs";
 import { schedule } from "node-cron";
 import categories from "./categories.json" with { type: "json" };
 
-import test from "./data/heads.json" with {type: "json"};
+import path from "path";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const app = express();
 const PORT = 3000;
@@ -41,7 +45,7 @@ schedule("0 0 */5 * *", fetchAllHeads);
 // Serve JSON file
 app.get("/heads.json", (req, res) => {
   if (existsSync(DATA_PATH)) {
-    res.sendFile(DATA_PATH, { root: __dirname });
+    res.sendFile(path.join(__dirname, DATA_PATH));
   } else {
     res.status(404).send("File not found");
   }
